@@ -1,0 +1,62 @@
+#map {
+    flex-grow: 1;
+    gap: 2rem;
+}
+.title {
+    z-index: 100;
+    font-weight: 800;
+    font-size: 2rem;
+    position: absolute;
+    text-align: center;
+
+
+}
+#map > .loc-to {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: flex-end;
+}
+
+#map > .loc-to > .logo {
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    height: 3rem;
+    cursor: pointer;
+}
+#map > .loc-to > .logo > .caption {
+    font-size: 1rem;
+    font-weight: 900;
+    color: red;
+}
+
+#map > .loc-to > .location {
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    height: 3rem;
+}
+#map > .loc-to > .location > .button {
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    background-color: transparent;
+    gap: 1rem;
+    border: none;
+    cursor: pointer;
+}
+#map > .loc-to > .location > .button > .image {
+    width: 5rem;
+}
+#map > .loc-to > .location > .button > .caption {
+    font-size: 1rem;
+    font-weight: 900;
+    color: red;
+}
