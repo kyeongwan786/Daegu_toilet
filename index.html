@@ -9,11 +9,11 @@
     <link rel="stylesheet" href="./assets/styles/index.css">
     <script src="./assets/scripts/data.js"></script>
     <script defer src="./assets/scripts/test.js"></script>
-    <script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0d4d42547bb98aba4a01379af27de88d"></script>
+    <script type="text/javascript"
+            src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0d4d42547bb98aba4a01379af27de88d"></script>
     <title>급똥</title>
 </head>
 <body>
-
 <div id="map">
     <h2 class="title">급똥</h2>
     <div class="loc-to">
@@ -30,18 +30,24 @@
             </button>
         </div>
     </div>
-<div class="console">
-    <div class="toilet-info">
-        <div class="info">
+    <div id="console">
+        <div class="toilet-info">
             <ul class="list">
-                <li class="item">화장실명</li>
-                <li class="item">도로명주소</li>
+                <li class="item name">우리 집</li>
+                <li class="item address">대구 서구 달서로 17길24</li>
             </ul>
-            <button class="button" type="button"></button>
-            <span class="caption">길찾기</span>
+        </div>
+        <div class="time">
+            <span class="anti">예상 소요시간</span>
+            <span class="minutes">100분</span>
+        </div>
+        <div class="toilet-address">
+            <button class="button" type="button">
+                <img alt="" class="icon" src="./assets/images/go.png">
+                <span class="caption">길찾기</span>
+            </button>
         </div>
     </div>
-</div>
 </div>
 </body>
 </html>

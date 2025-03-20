@@ -1,6 +1,10 @@
 #map {
     flex-grow: 1;
     gap: 2rem;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-end;
 }
 .title {
     z-index: 100;
@@ -16,6 +20,9 @@
     flex-direction: row;
     align-items: stretch;
     justify-content: flex-end;
+    position: absolute;
+    top: 0;
+    right: 0;
 }
 #map > .loc-to > .toilet {
     z-index: 100;
@@ -85,4 +92,85 @@
     font-size: 1rem;
     font-weight: 900;
     color: #000000;
+}
+
+
+#map > #console {
+    z-index: 100;
+    background-color: #ffffff;
+    width: 28%;
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 5rem;
+
+    border-radius: 0.55rem;
+    padding: 1rem;
+    box-shadow: 0 0 0.1rem 0.1rem #e0e0e0;
+}
+#map > #console > .toilet-info {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: space-between;
+}
+#map > #console > .toilet-info > .list {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: flex-start;
+    gap: 1.5rem;
+    list-style-type: none;
+}
+#map > #console > .toilet-address {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: center;
+
+
+}
+#map > #console > .toilet-address > .button {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    background-color: transparent;
+    border: 0.0625rem solid #e0e0e0;
+    border-radius: 0.35rem;
+    cursor: pointer;
+}
+#map > #console > .toilet-address > .button:hover {
+    border: 0.123rem solid #9e9e9e;
+}
+#map > #console > .toilet-address > .button > .caption {
+    font-weight: 600;
+}
+#map > #console > .toilet-address > .button > .icon {
+    width: 3rem;
+}
+#map > #console > .toilet-info > .list > .item.name {
+    font-size: 1.25rem;
+    font-weight: 600;
+}
+#map > #console > .toilet-info > .list > .item.address {
+    font-size: 0.875rem;
+    font-weight: 400;
+}
+#map > #console > .time {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+}
+#map > #console > .time > .anti {
+    font-size: 0.875rem;
+    font-weight: 400;
+}
+#map > #console > .time > .minutes {
+    font-size: 1.5rem;
+    font-weight: 500;
+    color: red;
 }

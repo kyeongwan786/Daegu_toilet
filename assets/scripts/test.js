@@ -64,20 +64,6 @@ const findToilets = () => {
          position: position
       });
 
-      const infoContent = `
-            <div style="width: 12rem; padding: 0.5rem; text-align: center;">
-                <strong>${toilet['C3']}</strong><br>
-                <small>${toilet['C4']}</small><br>
-                <small>개방시간: ${toilet['C17']} ${toilet['C18'] || ''}</small>
-            </div>
-        `;
-
-      const infoWindow = new kakao.maps.InfoWindow({
-         content: infoContent
-      });
-      kakao.maps.event.addListener(marker, 'click', function() {
-         infoWindow.open(mapInstance, marker);
-      });
       toiletMarkers.push(marker);
   }
 
