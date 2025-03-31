@@ -10,13 +10,10 @@ const findRoute = (event) => {
 
     const targetPosition = selectedMarker.getPosition();
 
-
     if (routePolyline) {
         routePolyline.setMap(null);
     }
 
-
-    const apiKey = "";
     const url = "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json";
 
     const data = {
@@ -30,7 +27,6 @@ const findRoute = (event) => {
         startName: "현재위치",
         endName: selectedMarker.toiletData['C3'] || "화장실"
     };
-
 
     const loadingDiv = document.createElement('div');
     loadingDiv.className = 'loading-indicator';
@@ -91,14 +87,11 @@ const findRoute = (event) => {
         });
 };
 
-
 const updateRouteInfo = (distance, time) => {
-
     const existingRouteInfo = document.querySelector('.route-info-panel');
     if (existingRouteInfo) {
         existingRouteInfo.remove();
     }
-
 
     const routeInfoPanel = document.createElement('div');
     routeInfoPanel.className = 'route-info-panel';
@@ -133,7 +126,6 @@ const updateRouteInfo = (distance, time) => {
         }
     });
 };
-
 
 const createToiletItem = (toilet, marker, distance) => {
     const walkingTimeMinutes = calculateWalkingTime(distance);

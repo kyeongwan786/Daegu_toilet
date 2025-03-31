@@ -5,6 +5,7 @@ const $nowBtn = $map.querySelector(':scope > .control-buttons > .control-button.
 const $infoPanel = $map.querySelector(':scope > .info-panel');
 const $navButton = document.querySelector('.navigation-button');
 const $routePanel = document.querySelector('.route-info-panel');
+const $loading = document.querySelector('.loading');
 
 
 
@@ -398,6 +399,14 @@ const updateRouteInfo = (distance, time) => {
 
 $nowBtn.onclick = () => nowPosition();
 $toyBtn.onclick = () => findToilets();
+window.onload = () => {
+    $loading.classList.add('visible');
+    setTimeout(findToilets, nowPosition, 1000);
+
+}
+$loading.classList.remove('visible');
+
+
 kakao.maps.event.addListener(mapInstance, 'bounds_changed', function() {
     if (window.boundsChangedTimer) clearTimeout(window.boundsChangedTimer);
     window.boundsChangedTimer = setTimeout(findToiletsInBounds, 300);
