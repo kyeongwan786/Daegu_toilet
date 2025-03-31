@@ -12,7 +12,11 @@
     <script type="text/javascript">
         document.write(`<script type="text/javascript" src="//dapi.kakao.com/v2/maps/sdk.js?appkey=0d4d42547bb98aba4a01379af27de88d"><\/script>`);
     </script>
-    <title>급똥 - 화장실 찾기 앱</title>
+    <script src="https://code.jquery.com/jquery-3.2.1.min.js"></script>
+    <script
+            src="https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=
+FP9DKNFvEA2GaOG9Qz31I5heFVxUYXbg5JidgIkZ"></script>
+    <title>급똥 - 화장실 찾기</title>
 </head>
 <body>
 <div id="map-container">
@@ -59,5 +63,37 @@
         </div>
     </div>
 </div>
+<div class="route-info-panel">
+    <div class="route-info-header">
+        <h3 class="title">최적 경로</h3>
+        <button class="close-route-info">상세</button>
+    </div>
+    <div class="route-info-content">
+        <div class="route-info-time">
+            <h5 class="info-value">${time}</h5>
+            <span class="info-value-1">분</span>
+        </div>
+        <div class="route-info-distance">
+            <span class="info-value">${distance}</span>
+            <span class="info-value-1">km</span>
+        </div>
+
+        <div class="toilet-name">
+            <span>${selectedMarker.toiletData['C3'] || '공중화장실'}</span>
+        </div>
+    </div>
+</div>
 </body>
 </html>
+
+
+
+
+
+
+
+
+
+
+
+

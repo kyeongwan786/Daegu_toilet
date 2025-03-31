@@ -4,6 +4,7 @@ const $toyBtn = $map.querySelector(':scope > .control-buttons > .control-button.
 const $nowBtn = $map.querySelector(':scope > .control-buttons > .control-button.location-finder > .icon-button');
 const $infoPanel = $map.querySelector(':scope > .info-panel');
 const $navButton = document.querySelector('.navigation-button');
+const $routePanel = document.querySelector('.route-info-panel');
 
 
 
@@ -89,7 +90,7 @@ const findToilets = () => {
                 item.classList.add('selected');
                 item.scrollIntoView({ behavior: 'smooth', block: 'center'});
             }
-
+            item.onclick = () => findRoute();
             const toiletName = marker.toiletData['C3'] || '공중화장실(이름없음)';
             const customInfoWindow = new kakao.maps.InfoWindow({
                 content: `<div style="width: auto; min-width: 4rem; padding: 0.5rem; text-align: center; white-space: nowrap;">${toiletName}</div>`
@@ -104,6 +105,7 @@ const findToilets = () => {
         });
 
         toiletMarkers.push(marker);
+        $infoPanel.classList.add('visible')
 
         const dx = position.getLat() - currentPosition.getLat();
         const dy = position.getLng() - currentPosition.getLng();
@@ -199,11 +201,6 @@ const updateInfoPanel = (toiletsInfo) => {
     toiletsInfo.forEach(info => {
         const item = createToiletItem(info.toilet, info.marker, info.distance);
         listContainer.appendChild(item);
-        const navButton = document.createElement('button');
-        navButton.className = 'navigation-button';
-        navButton.textContent = '길찾기';
-        navButton.addEventListener('click', findRoute);
-        item.appendChild(navButton);
 
     });
     $infoPanel.appendChild(listContainer);
@@ -217,18 +214,13 @@ const updateInfoPanel = (toiletsInfo) => {
 
 //이제 위에서 각 화장실 정보들을 반복문 돌려서 목록에 추가할때 createToiletItem이라는 함수 만들자 화장실 정보나 마커들을 추가하는 함수
 const createToiletItem = (toilet, marker, distance) => {
-    //지금은 tmap 연동전이라 간단한 알고리즘으로 대체
     const walkingTimeMinutes = calculateWalkingTime(distance);
-
-
-
 
     const item = document.createElement('div');
     item.className = 'toilet-item';
-    //마커와 상호작용을 해야되기때문에 이전에 findToilets 함수안에서 할당했듯이 아이템에다가 marker.id라는 속성을 준다.
     item.setAttribute('data-marker-id', marker.id);
 
-
+    const toiletName = toilet['C3'] || '공중화장실';
 
     item.addEventListener('click', () => {
         const prevSelected = $infoPanel.querySelector('.toilet-item.selected');
@@ -239,29 +231,25 @@ const createToiletItem = (toilet, marker, distance) => {
         mapInstance.setCenter(marker.getPosition());
         const customInfoWindow = new kakao.maps.InfoWindow({
             content: `<div style="width: auto; min-width: 4rem; padding: 0.5rem; text-align: center; white-space: nowrap;">${toiletName}</div>`
-        })
+        });
+
+        if (window.currentOpenInfoWindow) {
+            window.currentOpenInfoWindow.close();
+        }
+
         customInfoWindow.open(mapInstance, marker);
+        window.currentOpenInfoWindow = customInfoWindow;
 
         selectedMarker = marker;
     });
+
     if (marker === selectedMarker) {
         item.classList.add('selected');
     }
-    if (selectedMarker) {
-        $navButton.addEventListener('click', findRoute);
-        item.appendChild($navButton);
-    }
-
-
-    // 아 시발 어떻게 하라고
-
-
-
-
 
     item.innerHTML = `
     <div class="item-header">
-      <h3 class="item-name">${toilet['C3'] || '공중화장실'}</h3>
+      <h3 class="item-name">${toiletName}</h3>
       <span class="item-time">${walkingTimeMinutes}분</span>
     </div>
     <p class="item-address">${toilet['C4'] || toilet['C5'] || '주소 정보 없음'}</p>
@@ -270,15 +258,141 @@ const createToiletItem = (toilet, marker, distance) => {
       <span>여: ${parseInt(toilet['C12'] || 0) + parseInt(toilet['C13'] || 0)}칸</span>
       <span>${toilet['C17'] || '운영시간 정보 없음'}</span>
     </div>
-  `;
+    `;
+    const navButton = document.createElement('button');
+    navButton.className = 'navigation-button';
+    navButton.textContent = '길찾기';
+    navButton.onclick = () => {
+        findRoute();
+    }
+    item.appendChild(navButton);
     return item;
 
+
+
+    // 아 시발 어떻게 하라고
+
+
 };
 
+let routePolyline = null;
+const findRoute = (event) => {
 
-const findRoute = () => {
+    if (!selectedMarker || !currentMarker) {
+        alert('현재 위치 또는 목적지지를 먼저 설정해주세요');
+        return;
+    }
+    const targetPosition = selectedMarker.getPosition();
 
+    if (routePolyline) {
+        routePolyline.setMap(null);
+    }
+    const headers = {};
+    headers["appKey"] = "FP9DKNFvEA2GaOG9Qz31I5heFVxUYXbg5JidgIkZ";
+
+    $.ajax({
+        method: "POST",
+        headers: headers,
+        url: "https://apis.openapi.sk.com/tmap/routes/pedestrian?version=1&format=json&callback=result",
+        async: false,
+        data:{
+            startX: currentPosition.getLng(),
+            startY: currentPosition.getLat(),
+            endX: targetPosition.getLng(),
+            endY: targetPosition.getLat(),
+            reqCoordType: "WGS84GEO",
+            resCoordType: "WGS84GEO",
+            startName: "현재위치",
+            endName: selectedMarker.toiletData['C3'] || "화장실"
+        },
+        success: function(response) {
+            const resultData = response.features;
+
+            const path = [];
+            resultData.forEach(feature => {
+                if (feature.geometry.type === 'LineString') {
+                    feature.geometry.coordinates.forEach(coord => {
+                        path.push(new kakao.maps.LatLng(coord[1], coord[0]));
+                        console.log(path);
+                    });
+
+                }
+            })
+            routePolyline = new kakao.maps.Polyline({
+                path: path,
+                strokeWeight: 5,
+                strokeColor: '#FF5E00',
+                strokeOpacity: 0.8,
+                strokeStyle: 'solid'
+            });
+
+
+            routePolyline.setMap(mapInstance);
+            const totalDistance = resultData[0].properties.totalDistance;
+            const totalTime = resultData[0].properties.totalTime;
+
+            const distanceInKm = (totalDistance / 1000).toFixed(1);
+            const timeInMinutes = Math.round(totalTime / 60);
+
+            updateRouteInfo(distanceInKm, timeInMinutes);
+            $infoPanel.classList.remove('visible')
+
+            const bounds = new kakao.maps.LatLngBounds();
+            path.forEach(position => bounds.extend(position));
+            mapInstance.setBounds(bounds);
+            const routeInfo = document.querySelector('.route-info-panel');
+            routeInfo.classList.add('visible');
+        }
+    });
 };
+
+let today = new Date();
+let hours = today.getHours();
+let minutes = today.getMinutes();
+const updateRouteInfo = (distance, time) => {
+
+    const existingRouteInfo = document.querySelector('.route-info-panel');
+    if (existingRouteInfo) {
+        existingRouteInfo.remove();
+    }
+
+
+    const routeInfoPanel = document.createElement('div');
+    routeInfoPanel.className = 'route-info-panel';
+    routeInfoPanel.innerHTML = `
+        <div class="route-info-header">
+        <h3 class="title">최적 경로</h3>
+        <button class="close-route-info">상세</button>
+    </div>
+    <div class="route-info-content">
+        <div class="route-info-time">
+            <h5 class="info-value">${time}</h5>
+            <span class="info-value-1">분</span>
+        </div>
+        <div class="route-info-distance">
+            <span class="info-value">${distance}</span>
+            <span class="info-value-1">km</span>
+        </div>
+
+        <div class="toilet-name">
+            <span>${selectedMarker.toiletData['C3'] || '공중화장실'}</span>
+        </div>
+    </div>
+    `;
+
+
+    document.body.appendChild(routeInfoPanel);
+
+    const closeButton = routeInfoPanel.querySelector('.close-route-info');
+    closeButton.addEventListener('click', () => {
+        routeInfoPanel.remove();
+        if (routePolyline) {
+            routePolyline.setMap(null);
+            routePolyline = null;
+        }
+    });
+};
+
 
 
 
