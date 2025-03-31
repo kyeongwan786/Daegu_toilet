@@ -3,6 +3,9 @@ const $mapElement = document.getElementById('map');
 const $toyBtn = $map.querySelector(':scope > .control-buttons > .control-button.toilet-finder > .icon-button');
 const $nowBtn = $map.querySelector(':scope > .control-buttons > .control-button.location-finder > .icon-button');
 const $infoPanel = $map.querySelector(':scope > .info-panel');
+const $navButton = document.querySelector('.navigation-button');
+
+
 
 const mapInstance = new kakao.maps.Map($mapElement, {
     center: new kakao.maps.LatLng(35.8655753, 128.59339),
@@ -137,9 +140,9 @@ const calculateDistance = (pos1, pos2) => {
     return Math.sqrt(dx*dx + dy*dy);
 };
 const calculateWalkingTime = (distance) => {
-    const distanceInKm = distance * 111;  // 좌표 거리를 km로 변환
-    const walkingTimeHours = distanceInKm / 4;  // 시간당 4km 속도 가정
-    return Math.round(walkingTimeHours * 60);  // 분 단위로 변환
+    const distanceInKm = distance * 111;
+    const walkingTimeHours = distanceInKm / 4;
+    return Math.round(walkingTimeHours * 60);
 };
 
 //지도를 이동시키거나 확대 축소 등 바운더리가 변경됐을때의 화장실을 찾는 함수다
@@ -163,9 +166,9 @@ const findToiletsInBounds = () => {
         }
     });
 
-    // 거리가 짧은것부터 긴것까지 정렬해야하므로 sort쓰자
+    // 거리가 짧은것부터 긴것까지 정렬해야하므로 sort
     visibleToilets.sort((a, b) => a.distance - b.distance);
-    // infopanel에 업데이트해야하는 함수도 작성해야함 위에서 말했듯이 지도를 이동시키거나 확대 축소 등 바운더리가 변경될때마다 맵에 찍히는 화장실 데이터가 달라지기때문에 유동적으로 실시간으로 인포패널에 업데이트할 수 있는 함수를 따로 만들어야함
+    // infopanel에 업데이트해야하는 함수도 작성해야함 위에서 말했듯이 지도를 이동시키거나 확대 축소 등 바운더리가 변경될때마다 맵에 찍히는 화장실 데이터가 달라지기때문에  실시간으로 인포패널에 업데이트할 수 있는 함수를 따로 만들어야함
     updateInfoPanel(visibleToilets)
 };
 //기존에 있는 인포패널에있는 화장실 데이터를 싹 지운다 다시 업데이트해야하기떄문
@@ -192,18 +195,24 @@ const updateInfoPanel = (toiletsInfo) => {
     const listContainer = document.createElement('div');
     listContainer.className = 'toilets-list';
     //각 화장실 정보들을 반복문 돌려서 목록에 추가
+
     toiletsInfo.forEach(info => {
         const item = createToiletItem(info.toilet, info.marker, info.distance);
         listContainer.appendChild(item);
+        const navButton = document.createElement('button');
+        navButton.className = 'navigation-button';
+        navButton.textContent = '길찾기';
+        navButton.addEventListener('click', findRoute);
+        item.appendChild(navButton);
+
     });
     $infoPanel.appendChild(listContainer);
 
+
+
     // 길찾기 버튼 추가하고 인포패널은 시마이치자
-    const navButton = document.createElement('button');
-    navButton.className = 'navigation-button';
-    navButton.textContent = '길찾기';
-    navButton.addEventListener('click', findRoute);
-    $infoPanel.appendChild(navButton);
+
+
 };
 
 //이제 위에서 각 화장실 정보들을 반복문 돌려서 목록에 추가할때 createToiletItem이라는 함수 만들자 화장실 정보나 마커들을 추가하는 함수
@@ -211,10 +220,15 @@ const createToiletItem = (toilet, marker, distance) => {
     //지금은 tmap 연동전이라 간단한 알고리즘으로 대체
     const walkingTimeMinutes = calculateWalkingTime(distance);
 
+
+
+
     const item = document.createElement('div');
     item.className = 'toilet-item';
     //마커와 상호작용을 해야되기때문에 이전에 findToilets 함수안에서 할당했듯이 아이템에다가 marker.id라는 속성을 준다.
     item.setAttribute('data-marker-id', marker.id);
+
+
 
     item.addEventListener('click', () => {
         const prevSelected = $infoPanel.querySelector('.toilet-item.selected');
@@ -223,13 +237,28 @@ const createToiletItem = (toilet, marker, distance) => {
         item.classList.add('selected');
 
         mapInstance.setCenter(marker.getPosition());
-        toiletInfoWindow.open(mapInstance, marker);
+        const customInfoWindow = new kakao.maps.InfoWindow({
+            content: `<div style="width: auto; min-width: 4rem; padding: 0.5rem; text-align: center; white-space: nowrap;">${toiletName}</div>`
+        })
+        customInfoWindow.open(mapInstance, marker);
 
         selectedMarker = marker;
     });
     if (marker === selectedMarker) {
         item.classList.add('selected');
     }
+    if (selectedMarker) {
+        $navButton.addEventListener('click', findRoute);
+        item.appendChild($navButton);
+    }
+
+
+    // 아 시발 어떻게 하라고
+
+
+
+
+
     item.innerHTML = `
     <div class="item-header">
       <h3 class="item-name">${toilet['C3'] || '공중화장실'}</h3>
@@ -243,6 +272,7 @@ const createToiletItem = (toilet, marker, distance) => {
     </div>
   `;
     return item;
+
 };
 
 
