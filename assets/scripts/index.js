@@ -395,16 +395,12 @@ const updateRouteInfo = (distance, time) => {
 };
 
 
-
-
 $nowBtn.onclick = () => nowPosition();
 $toyBtn.onclick = () => findToilets();
 window.onload = () => {
-    $loading.classList.add('visible');
-    setTimeout(findToilets, nowPosition, 1000);
-
+    setTimeout(findToilets, 2000);
+    nowPosition();
 }
-$loading.classList.remove('visible');
 
 
 kakao.maps.event.addListener(mapInstance, 'bounds_changed', function() {
