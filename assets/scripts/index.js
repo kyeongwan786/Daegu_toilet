@@ -132,6 +132,7 @@ const findToilets = () => {
         mapInstance.setBounds(bounds);
 
         selectedMarker = closestToiletMarker;
+        console.log("시작 좌표:", [currentPosition.getLng(), currentPosition.getLat()]);
 
         setTimeout(findToiletsInBounds, 200);
     }
@@ -308,13 +309,15 @@ const findRoute = (event) => {
         },
         success: function(response) {
             const resultData = response.features;
+            console.log("시작 좌표:", [currentPosition.getLng(), currentPosition.getLat()]);
+            console.log("마지막 좌표:", [targetPosition.getLng(), targetPosition.getLat()]);
+            console.log("경로 데이터:", resultData);
 
             const path = [];
             resultData.forEach(feature => {
                 if (feature.geometry.type === 'LineString') {
                     feature.geometry.coordinates.forEach(coord => {
                         path.push(new kakao.maps.LatLng(coord[1], coord[0]));
-                        console.log(path);
                     });
 
                 }
@@ -339,10 +342,16 @@ const findRoute = (event) => {
             $infoPanel.classList.remove('visible')
 
             const bounds = new kakao.maps.LatLngBounds();
-            path.forEach(position => bounds.extend(position));
-            mapInstance.setBounds(bounds);
+            bounds.extend(currentPosition);
+            bounds.extend(targetPosition);
+            path.forEach((position) => {
+                bounds.extend(position);
+            });
             const routeInfo = document.querySelector('.route-info-panel');
             routeInfo.classList.add('visible');
+            setTimeout(() => {
+                mapInstance.setBounds(bounds);
+            }, 100);
         }
     });
 };
@@ -407,3 +416,19 @@ kakao.maps.event.addListener(mapInstance, 'bounds_changed', function() {
     if (window.boundsChangedTimer) clearTimeout(window.boundsChangedTimer);
     window.boundsChangedTimer = setTimeout(findToiletsInBounds, 300);
 });
+
+function loadApiScripts() {
+
+    const kakaoScript = document.createElement('script');
+    kakaoScript.src = `//dapi.kakao.com/v2/maps/sdk.js?appkey=${CONFIG.KAKAO_APP_KEY}`;
+    kakaoScript.async = true;
+
+
+    const tmapScript = document.createElement('script');
+    tmapScript.src = `https://apis.openapi.sk.com/tmap/jsv2?version=1&appKey=${CONFIG.TMAP_APP_KEY}`;
+    tmapScript.async = true;
+
+    document.head.appendChild(kakaoScript);
+    document.head.appendChild(tmapScript);
+}
+document.addEventListener('DOMContentLoaded', loadApiScripts);
