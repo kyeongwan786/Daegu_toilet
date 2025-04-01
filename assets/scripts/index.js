@@ -83,6 +83,21 @@ const findToilets = () => {
         marker.toiletData = toilet;
 
         kakao.maps.event.addListener(marker, 'click', function(){
+
+
+
+
+
+
+            const routeInfoPanel = document.querySelector('.route-info-panel');
+            if (routeInfoPanel) {
+                routeInfoPanel.remove();
+            }
+            if (routePolyline) {
+                routePolyline.setMap(null);
+                routePolyline = null;
+            }
+            $infoPanel.classList.add('visible');
             const prevSelected = $infoPanel.querySelector('.toilet-item.selected');
             if (prevSelected) prevSelected.classList.remove('selected');
 
@@ -99,14 +114,15 @@ const findToilets = () => {
             if (window.currentOpenInfoWindow) {
                 window.currentOpenInfoWindow.close();
             }
-
             customInfoWindow.open(mapInstance, marker);
             window.currentOpenInfoWindow = customInfoWindow;
             selectedMarker = marker;
+
+
         });
 
         toiletMarkers.push(marker);
-        $infoPanel.classList.add('visible')
+        $infoPanel.classList.add('visible');
 
         const dx = position.getLat() - currentPosition.getLat();
         const dy = position.getLng() - currentPosition.getLng();
