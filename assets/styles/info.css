@@ -16,17 +16,75 @@
     justify-content: center;
     gap: 2rem;
 }
-#toilet-info-panel > .toilet-info > .toilet-info-header > .review-star {
+#toilet-info-panel > .toilet-info > .toilet-info-header > .review {
     display: flex;
     flex-direction: row;
     align-items: stretch;
     justify-content: stretch;
-    left: 80%;
-    top: 10%;
-    gap: 1rem;
-    font-size: 3rem;
 }
+#toilet-info-panel > .toilet-info > .toilet-info-header > .review > .review-star {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 1rem;
+    font-size: 1rem;
+    cursor: pointer;
+    line-height: 1rem;
+
+}
+#toilet-info-panel > .toilet-info > .toilet-info-header > .review >  .review-count {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: flex-start;
+    font-size: 1rem;
+    cursor: pointer;
+    line-height: 1rem;
+    gap: 1rem;
+
+}
+#toilet-info-panel > .toilet-info > .toilet-info-header > .review >  .review-star > .caption {
+    left: 50%;
+    font-size: 1.45rem;
+    font-weight: 700;
+}
+#toilet-info-panel > .toilet-info > .toilet-info-header > .review >  .review-star > .day {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #2a2927;
+
+}
+#toilet-info-panel > .toilet-info > .toilet-info-header > .review >  .review-star > .day:after {
+    content: "";
+    border: 0.0625rem solid #e0e0e0;
+    margin-left: 1rem;
+}
+#toilet-info-panel > .toilet-info > .toilet-info-header > .review >  .review-count > .count {
+    left: 50%;
+    font-size: 1.45rem;
+    font-weight: 700;
+    margin-left: 1rem;
+}
+#toilet-info-panel > .toilet-info > .toilet-info-header > .review >  .review-count > .day {
+    font-size: 0.875rem;
+    font-weight: 500;
+    color: #2a2927;
+
+}
+
 #toilet-info-panel > .toilet-info > .toilet-info-header > .title {
-    font-size: 3rem;
+    font-size: 2rem;
+    color: #151515;
+}
+#toilet-info-panel > .toilet-info > .toilet-info-image {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    box-shadow: 0 0.125rem 0.3rem #0000001A;
+    border: 0.625rem solid #e0e0e0;
+}
+#toilet-info-panel > .toilet-info > .toilet-info-image > .toilet-image {
+    border: 0.0625rem solid #2a2927;
+    padding: 0.5rem;
 
 }
