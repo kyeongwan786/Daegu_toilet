@@ -78,13 +78,16 @@
     color: #151515;
 }
 #toilet-info-panel > .toilet-info > .toilet-info-image {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
+    display: flex;
+    flex-direction: row;
     box-shadow: 0 0.125rem 0.3rem #0000001A;
-    border: 0.625rem solid #e0e0e0;
+    border: 0.0625rem solid #e0e0e0;
+    padding: 0.3rem;
 }
 #toilet-info-panel > .toilet-info > .toilet-info-image > .toilet-image {
-    border: 0.0625rem solid #2a2927;
     padding: 0.5rem;
-
+}
+#toilet-info-panel > .toilet-info > .toilet-info-image:has(:not(:last-child).toilet-image):after {
+    content: "";
+    border: 0.5rem solid #e0e0e0;
 }
