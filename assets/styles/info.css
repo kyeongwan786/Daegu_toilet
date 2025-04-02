@@ -1,0 +1,32 @@
+#toilet-info-panel {
+    min-width: 31rem;
+}
+#toilet-info-panel > .toilet-info {
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    justify-content: stretch;
+    margin: 1rem;
+    gap: 5rem;
+}
+#toilet-info-panel > .toilet-info > .toilet-info-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2rem;
+}
+#toilet-info-panel > .toilet-info > .toilet-info-header > .review-star {
+    display: flex;
+    flex-direction: row;
+    align-items: stretch;
+    justify-content: stretch;
+    left: 80%;
+    top: 10%;
+    gap: 1rem;
+    font-size: 3rem;
+}
+#toilet-info-panel > .toilet-info > .toilet-info-header > .title {
+    font-size: 3rem;
+
+}
